@@ -9,10 +9,9 @@ instance_model = "b2-15"
 
 def get_optimal_flavor_id() -> str:
     flavors = provider.get_flavors(project_id)
-    filtered_flavors = list(filter(
-        lambda flavor: flavor["region"] == region and flavor["name"] == instance_model,
-        flavors))
-    return filtered_flavors[0]["id"]
+    filtered_flavors = [flavor["id"] for flavor in flavors if
+                        flavor["region"] == region and flavor["name"] == instance_model]
+    return filtered_flavors[0]
 
 
 def get_latest_backup():
