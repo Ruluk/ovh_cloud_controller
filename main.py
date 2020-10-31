@@ -16,6 +16,14 @@ def create_instance_from_backup(backup: dict, flavor_id: str, ssh_key: str):
     })
 
 
+def delete_all_instances():
+    instances = provider.get_all_instances(project_id)
+
+    for instance in instances:
+        print("deleting instance", instance)
+        provider.delete_instance(project_id, instance)
+
+
 def get_latest_backup(prefix: str):
     backups = provider.get_backups(project_id)
     filtered_backups = [backup for backup in backups if backup["name"].startswith(prefix)]
@@ -42,3 +50,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # delete_all_instances()

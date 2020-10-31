@@ -9,6 +9,14 @@ def create_instance(project_id: str, instance: dict):
     return client.post(f"/cloud/project/{project_id}/instance", **instance)
 
 
+def delete_instance(project_id: str, instance: dict):
+    return client.delete(f"/cloud/project/{project_id}/instance/{instance['id']}")
+
+
+def get_all_instances(project_id: str) -> List[dict]:
+    return client.get(f"/cloud/project/{project_id}/instance")
+
+
 def get_backups(project_id: str):
     return client.get(f"/cloud/project/{project_id}/snapshot")
 
