@@ -7,7 +7,7 @@ instance_model = "b2-15"
 
 
 def create_instance_from_backup(backup: dict, flavor_id: str, ssh_key: str):
-    provider.create_instance(project_id, {
+    return provider.create_instance(project_id, {
         "flavorId": flavor_id,
         "sshKeyId": ssh_key,
         "imageId": backup["id"],
@@ -22,6 +22,18 @@ def delete_all_instances():
     for instance in instances:
         print("deleting instance", instance)
         provider.delete_instance(project_id, instance)
+
+
+def find_instance_ip(instance_id: str) -> str:
+    instance_ip = None
+
+    while instance_ip is None:
+        instance = provider.get_instance(project_id, instance_id)
+
+        if len(instance["ipAddresses"]) > 0:
+            instance_ip = instance["ipAddresses"][0]["ip"]
+
+    return instance_ip
 
 
 def get_latest_backup(prefix: str):
@@ -45,7 +57,10 @@ def main():
     flavor_id = get_optimal_flavor_id()
     ssh_key = get_ssh_key()
     backup = get_latest_backup(backup_prefix)
-    create_instance_from_backup(backup, flavor_id, ssh_key)
+    instance = create_instance_from_backup(backup, flavor_id, ssh_key)
+    ip = find_instance_ip(instance["id"])
+    print(instance)
+    print(ip)
 
 
 if __name__ == '__main__':

@@ -17,6 +17,10 @@ def get_all_instances(project_id: str) -> List[dict]:
     return client.get(f"/cloud/project/{project_id}/instance")
 
 
+def get_instance(project_id: str, instance_id: str) -> dict:
+    return client.get(f"/cloud/project/{project_id}/instance/{instance_id}")
+
+
 def get_backups(project_id: str):
     return client.get(f"/cloud/project/{project_id}/snapshot")
 
