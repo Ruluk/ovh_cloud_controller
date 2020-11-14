@@ -5,6 +5,10 @@ import ovh
 client = ovh.Client()
 
 
+def create_backup(project_id: str, instance_id: str, backup_name: str):
+    return client.post(f"/cloud/project/{project_id}/instance/{instance_id}/snapshot", snapshotName=backup_name)
+
+
 def create_instance(project_id: str, instance: dict):
     return client.post(f"/cloud/project/{project_id}/instance", **instance)
 

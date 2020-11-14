@@ -1,9 +1,22 @@
+from datetime import datetime
+
 import provider
 
 project_id = "cf542abba8324af5b07aa54d2b91fa31"
 backup_prefix = "big-blue"
 region = "BHS5"
 instance_model = "b2-15"
+
+
+def create_backup_from_instance(instance_name: str) -> str:
+    instances = provider.get_all_instances(project_id)
+
+    for instance in instances:
+        if instance["name"] == instance_name:
+            provider.create_backup(project_id, instance["id"], f"{instance_name} {datetime.today().isoformat(' ')}")
+            return instance["id"]
+    else:
+        return ""
 
 
 def create_instance_from_backup(backup: dict, flavor_id: str, ssh_key: str):
