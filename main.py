@@ -29,12 +29,14 @@ def create_instance_from_backup(backup: dict, flavor_id: str, ssh_key: str):
     })
 
 
-def delete_all_instances():
+def delete_instance(instance_name: str):
     instances = provider.get_all_instances(project_id)
 
     for instance in instances:
-        print("deleting instance", instance)
-        provider.delete_instance(project_id, instance)
+        if instance["name"] == instance_name:
+            print("deleting instance", instance)
+            provider.delete_instance(project_id, instance)
+            break
 
 
 def find_instance_ip(instance_id: str) -> str:
