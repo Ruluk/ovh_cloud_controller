@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import sleep
 
 import provider
 
@@ -76,6 +77,26 @@ def main():
     ip = find_instance_ip(instance["id"])
     print(instance)
     print(ip)
+
+
+def wait_instance_ready(instance_name: str):
+    instance_ready = False
+    instance_id = None
+    print("Waiting for instance to be ready...")
+
+    while instance_ready is False:
+        if instance_id is None:
+            instances = provider.get_all_instances(project_id)
+            instance = [instance for instance in instances if instance["name"] == instance_name][0]
+            instance_id = instance["id"]
+        else:
+            instance = provider.get_instance(project_id, instance_id)
+
+        if instance["status"] == "ACTIVE":
+            instance_ready = True
+        else:
+            print("Not ready yet. Trying again in 30 seconds.")
+            sleep(30)
 
 
 if __name__ == '__main__':
