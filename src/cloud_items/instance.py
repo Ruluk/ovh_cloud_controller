@@ -1,6 +1,6 @@
 from time import sleep
 
-import provider
+import src.provider as provider
 
 
 def create_from_backup(project_id: str, backup: dict, flavor_id: str, ssh_key: str):

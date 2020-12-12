@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import provider
+import src.provider as provider
 
 
 def create_from_instance(project_id: str, instance_name: str) -> str:

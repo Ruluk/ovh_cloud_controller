@@ -1,6 +1,5 @@
-import backup
-import instance
-import provider
+from src import provider
+from src.cloud_items import backup, instance
 
 project_id = "cf542abba8324af5b07aa54d2b91fa31"
 backup_prefix = "big-blue"
