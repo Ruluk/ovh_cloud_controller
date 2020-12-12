@@ -1,61 +1,11 @@
-from datetime import datetime
-from time import sleep
-
+import backup
+import instance
 import provider
 
 project_id = "cf542abba8324af5b07aa54d2b91fa31"
 backup_prefix = "big-blue"
 region = "BHS5"
 instance_model = "b2-15"
-
-
-def create_backup_from_instance(instance_name: str) -> str:
-    instances = provider.get_all_instances(project_id)
-
-    for instance in instances:
-        if instance["name"] == instance_name:
-            provider.create_backup(project_id, instance["id"], f"{instance_name} {datetime.today().isoformat(' ')}")
-            return instance["id"]
-    else:
-        return ""
-
-
-def create_instance_from_backup(backup: dict, flavor_id: str, ssh_key: str):
-    return provider.create_instance(project_id, {
-        "flavorId": flavor_id,
-        "sshKeyId": ssh_key,
-        "imageId": backup["id"],
-        "name": backup["name"].split(" ")[0],
-        "region": backup["region"],
-    })
-
-
-def delete_instance(instance_name: str):
-    instances = provider.get_all_instances(project_id)
-
-    for instance in instances:
-        if instance["name"] == instance_name:
-            print("deleting instance", instance)
-            provider.delete_instance(project_id, instance)
-            break
-
-
-def find_instance_ip(instance_id: str) -> str:
-    instance_ip = None
-
-    while instance_ip is None:
-        instance = provider.get_instance(project_id, instance_id)
-
-        if len(instance["ipAddresses"]) > 0:
-            instance_ip = instance["ipAddresses"][0]["ip"]
-
-    return instance_ip
-
-
-def get_latest_backup(prefix: str):
-    backups = provider.get_backups(project_id)
-    filtered_backups = [backup for backup in backups if backup["name"].startswith(prefix)]
-    return filtered_backups[0]
 
 
 def get_optimal_flavor_id() -> str:
@@ -72,31 +22,11 @@ def get_ssh_key() -> str:
 def main():
     flavor_id = get_optimal_flavor_id()
     ssh_key = get_ssh_key()
-    backup = get_latest_backup(backup_prefix)
-    instance = create_instance_from_backup(backup, flavor_id, ssh_key)
-    ip = find_instance_ip(instance["id"])
-    print(instance)
+    latest_backup = backup.get_latest_starting_with(project_id, backup_prefix)
+    new_instance = instance.create_from_backup(project_id, latest_backup, flavor_id, ssh_key)
+    ip = instance.find_ip(project_id, new_instance["id"])
+    print(new_instance)
     print(ip)
-
-
-def wait_instance_ready(instance_name: str):
-    instance_ready = False
-    instance_id = None
-    print("Waiting for instance to be ready...")
-
-    while instance_ready is False:
-        if instance_id is None:
-            instances = provider.get_all_instances(project_id)
-            instance = [instance for instance in instances if instance["name"] == instance_name][0]
-            instance_id = instance["id"]
-        else:
-            instance = provider.get_instance(project_id, instance_id)
-
-        if instance["status"] == "ACTIVE":
-            instance_ready = True
-        else:
-            print("Not ready yet. Trying again in 30 seconds.")
-            sleep(30)
 
 
 if __name__ == '__main__':
