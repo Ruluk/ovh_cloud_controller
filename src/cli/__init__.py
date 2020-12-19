@@ -1,7 +1,7 @@
 import sys
 from getopt import getopt
 
-from . import instance
+from . import instance, backup
 
 _commands = {
     "help": lambda opts, arg:
@@ -10,6 +10,7 @@ _commands = {
 
 _subcommands = {
     "instance": instance.commands,
+    "backup": backup.commands,
 }
 
 
@@ -44,6 +45,9 @@ Usage: main.py <command>
  
 Available commands:
 help
+
+backup create-from-instance <instance-name>
+
 instance create-from-latest-backup [--region=BHS5] [--instance-model=s1-2] <backup-prefix>
 instance delete <instance-name>
 instance wait-ready <instance-name>
