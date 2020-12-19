@@ -5,7 +5,7 @@ from .config import _get_project_id, _get_region, _get_instance_model
 
 commands = {
     "create-from-latest-backup": lambda opts, arg:
-    instance.create_from_latest_backup(_get_project_id(), _get_region(opts), _get_instance_model(opts), arg),
+    print(instance.create_from_latest_backup(_get_project_id(), _get_region(opts), _get_instance_model(opts), arg)[1]),
 
     "delete": lambda opts, arg:
     instance_item.delete(_get_project_id(), arg),
