@@ -17,9 +17,9 @@ RESPONSE=$(
   }'
 )
 
-CONSUMER_KEY=$(echo $RESPONSE | jq -r '.consumerKey')
-VALIDATION_URL=$(echo $RESPONSE | jq -r '.validationUrl')
+CONSUMER_KEY=$(echo "$RESPONSE" | jq -r '.consumerKey')
+VALIDATION_URL=$(echo "$RESPONSE" | jq -r '.validationUrl')
 
-sed -i "s/consumer_key=\w*/consumer_key=$CONSUMER_KEY/" ovh.conf
+sed -i '' "s/consumer_key=[A-Za-z0-9]*/consumer_key=$CONSUMER_KEY/" ovh.conf
 
 echo "Please go to $VALIDATION_URL to approve the application."

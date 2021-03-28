@@ -20,7 +20,9 @@ consumer_key=<Will be filled by script>
 project_id=abc123def456abc123def456
 ```
 
-Second, run `bash get_consumer_key.sh` to fill a new consumer key. It will require a web authentication.
+Second, make sure you have `jq` installed.
+
+Third, run `bash get_consumer_key.sh` to fill a new consumer key. It will require a web authentication.
 
 Then, you're ready to go!
 
