@@ -14,7 +14,7 @@ endpoint=ovh-ca
 [ovh-ca]
 application_key=abc123def456
 application_secret=abc123def456abc123def456
-consumer_key=<Will be filled by script>
+consumer_key= # This will be filled by the script.
 
 [custom]
 project_id=abc123def456abc123def456
