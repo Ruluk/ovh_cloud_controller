@@ -20,7 +20,7 @@ def _get_project_id() -> str:
 
     for line in file:
         if line.startswith("project_id"):
-            return line.split("=")[1]
+            return line.split("=")[1].strip()
     else:
         raise FileNotFoundError("ovh.conf file needs to define the project_id")
 
